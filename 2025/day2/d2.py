@@ -39,7 +39,6 @@ def is_contained_in_ranges(ranges: List[Range], number: int) -> bool:
 
 def part2_reverse_max(parsed_ranges: List[Range]) -> int:
     seed = 1
-    solution = 0
     limit = detect_max_in_limit(parsed_ranges)
     considered_set = set()
     while True:
