@@ -33,7 +33,7 @@ def load_grid(path: str | Path, to_int: bool = True) -> List[List[int]]:
 	return grid
 
 def solve(grid):
-    return part1(grid)
+    return part2(grid)
 
 def find_max(row, limit):
 	max_val, max_index = float("-inf"), -1
@@ -63,8 +63,31 @@ def part1(grid: List[List[int]]) -> int:
 		solution += current_sol
 	return solution
 
+def find_max_range(row, start, end):
+	max_val, max_index = float("-inf"), -1
+	for i in range(start, end):
+		if row[i] == max_val:
+			# don't change index
+			continue
+		elif row[i] > max_val:
+			max_val, max_index = row[i], i
+	return max_val, max_index
+
 def part2(grid: List[List[int]]) -> int:
-	pass
+	solution = 0
+	for row in grid:
+		mo_digits = 11
+		num = ''
+		start, end = 0, len(row) 
+		while mo_digits >= 0:
+			max_val, max_index = find_max_range(row, start, end - mo_digits)
+			num += str(max_val)
+			start = max_index + 1
+			mo_digits -= 1
+		
+		current_sol = int(num)
+		solution += current_sol
+	return solution
 
 if __name__ == "__main__":
 	import argparse
@@ -85,6 +108,7 @@ if __name__ == "__main__":
 
 	grid = load_grid(path, to_int=args.to_int)
 	print(f'Answer for part 1: {part1(grid)}')
+	print(f'Answer for part 2: {part2(grid)}')
 	
 	setup_code = "from __main__ import solve; from __main__ import grid"
 	stmt = "solve(grid)"
