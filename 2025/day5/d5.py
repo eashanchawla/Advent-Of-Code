@@ -47,12 +47,44 @@ def part1(ranges: list[Range], values: list[int]) -> int:
                 break
     return fresh_ingredients
 
-def calculate_overlap(current_range, visited_range) -> int:
-    pass
+def calculate_overlap(range1: Range, range2: Range) -> bool:
+    # range1 is before range 2 and completely out 
+    if range1.end < range2.start or range2.end < range1.start:
+        return False
+    return True
+
+def find_max(ranges: list[Range]) -> int:
+    return max([current_range.end for current_range in ranges])
+    
+
+def find_power_of_2(max: int) -> int:
+    pow = 1
+    while True:
+        if 2 ** pow >= max:
+            return 2 ** pow
+        pow += 1
+
+def is_overlapping(range_left: Range, range_right: Range) -> bool:
+    return range_right.start <= range_left.end + 1
+
+def merge_overlap(range_left: Range, range_right: Range) -> Range:
+    start = min(range_left.start, range_right.start)
+    end = max(range_left.end, range_right.end)
+    return Range(start, end)
 
 def part2(ranges: list[Range]) -> int:
     """Solve part 2 of the puzzle."""
-    pass
+    sorted_ranges = sorted(ranges, key=lambda r: r.start)
+    merged_ranges = [sorted_ranges[0]]
+
+    for i in range(1, len(sorted_ranges)):
+        current_range = sorted_ranges[i]
+        if is_overlapping(merged_ranges[-1], current_range):
+            merged_ranges[-1] = merge_overlap(merged_ranges[-1], current_range)
+        else:
+            merged_ranges.append(current_range)
+
+    return sum([(current_range.end - current_range.start + 1)for current_range in merged_ranges])
 
 
 def solve_part1(filepath: str) -> int:
